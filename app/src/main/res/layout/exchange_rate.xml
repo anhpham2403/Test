@@ -1,8 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorAccent"
-    >
-</android.support.constraint.ConstraintLayout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.anh.exchangerate.main.exchangeRate.ExchangeRateViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/img_ava_nation_from"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:src="@color/colorPrimaryDark"
+            app:layout_constraintLeft_toLeftOf="@+id/view_from"
+            app:layout_constraintTop_toTopOf="@+id/view_from"
+            android:clickable="false"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_drop_down_black_24dp"
+            app:layout_constraintRight_toRightOf="@id/view_from"
+            app:layout_constraintTop_toTopOf="@id/view_from"
+            android:clickable="false"/>
+
+        <View
+            android:id="@+id/view_from"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="100dp"
+            android:onClick="@{() -> viewModel.onClickFrom()}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/img_ava_nation_to"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:src="@color/colorPrimaryDark"
+            app:layout_constraintLeft_toLeftOf="@+id/view_to"
+            app:layout_constraintTop_toTopOf="@+id/view_to"
+            android:clickable="false"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_drop_down_black_24dp"
+            app:layout_constraintRight_toRightOf="@id/view_to"
+            app:layout_constraintTop_toTopOf="@id/view_to" />
+
+        <View
+            android:id="@+id/view_to"
+            android:layout_width="130dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_from" />
+
+        <EditText
+            android:id="@+id/et_from"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_from"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_from" />
+
+        <EditText
+            android:id="@+id/et_to"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view_to"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_to" />
+
+        <TextView
+            android:id="@+id/tv_rate_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_from" />
+
+        <TextView
+            android:id="@+id/tv_rate_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_to" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

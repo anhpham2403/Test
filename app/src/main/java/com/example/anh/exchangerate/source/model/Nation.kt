@@ -1,14 +1,10 @@
 package com.example.anh.exchangerate.source.model
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.NonNull
 
-@Entity(tableName = "nation")
-class Nation(): Parcelable{
+class Nation() : Parcelable {
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -16,37 +12,31 @@ class Nation(): Parcelable{
     override fun describeContents(): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
     @NonNull
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private lateinit var mId: String
-    @ColumnInfo(name = "currencyId")
-    private lateinit var mCurrencyId: String
-    @ColumnInfo(name = "currencyName")
-    private lateinit var mCurrencyName: String
-    @ColumnInfo(name = "name")
-    private lateinit var mName: String
-    @ColumnInfo(name = "alpha3")
-    private lateinit var mAlpha3: String
-    @ColumnInfo(name = "currencySymbol")
-    private lateinit var mCurrencySymbol: String
+    lateinit var id: String
+    lateinit var currencyId: String
+    lateinit var currencyName: String
+    lateinit var name: String
+    lateinit var alpha3: String
+    lateinit var currencySymbol: String
 
     constructor(parcel: Parcel) : this() {
-        mId = parcel.readString()
-        mCurrencyId = parcel.readString()
-        mCurrencyName = parcel.readString()
-        mName = parcel.readString()
-        mAlpha3 = parcel.readString()
-        mCurrencySymbol = parcel.readString()
+        id = parcel.readString()
+        currencyId = parcel.readString()
+        currencyName = parcel.readString()
+        name = parcel.readString()
+        alpha3 = parcel.readString()
+        currencySymbol = parcel.readString()
     }
 
-    constructor(mId: String, mCurrencyId: String, mCurrencyName: String, mName: String, mAlpha3: String,currencySymbol: String) : this() {
-        this.mId = mId
-        this.mCurrencyId = mCurrencyId
-        this.mCurrencyName = mCurrencyName
-        this.mName = mName
-        this.mAlpha3 = mAlpha3
-        this.mCurrencySymbol = currencySymbol
+    constructor(mId: String, mCurrencyId: String, mCurrencyName: String, mName: String, mAlpha3: String, currencySymbol: String) : this() {
+        this.id = mId
+        this.currencyId = mCurrencyId
+        this.currencyName = mCurrencyName
+        this.name = mName
+        this.alpha3 = mAlpha3
+        this.currencySymbol = currencySymbol
     }
 
     companion object CREATOR : Parcelable.Creator<Nation> {
