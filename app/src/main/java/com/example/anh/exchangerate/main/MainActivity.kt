@@ -14,6 +14,7 @@ import android.view.View
 import com.example.anh.exchangerate.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import java.net.URL
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var mViewPager: ViewPager

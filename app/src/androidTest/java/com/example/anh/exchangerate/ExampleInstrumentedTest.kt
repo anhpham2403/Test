@@ -3,10 +3,12 @@ package com.example.anh.exchangerate
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 
-import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
+import android.arch.persistence.room.Room
+import org.junit.After
+import java.io.IOException
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -15,10 +17,19 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.example.anh.exchangerate", appContext.packageName)
+    private var db: NationDatabase
+    private var currencyDAO: CurrencyDAO
+    init {
+        val context = InstrumentationRegistry.getTargetContext()
+        db = Room.inMemoryDatabaseBuilder(context, NationDatabase::class.java!!).build();
+        currencyDAO = db.currencyDAO()
     }
+
+    @After
+    @Throws(IOException::class)
+    fun closeDb() {
+        db.close()
+    }
+
+
 }
