@@ -1,4 +1,4 @@
-package com.example.anh.exchangerate.source.data
+package com.example.anh.exchangerate.source.data.local.sqlite
 
 class DBContract {
     class Currency {

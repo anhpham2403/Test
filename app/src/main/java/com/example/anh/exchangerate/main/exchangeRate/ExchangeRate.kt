@@ -13,13 +13,18 @@ class ExchangeRate : Fragment() {
     private lateinit var mExchangeRateViewModel: ExchangeRateViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mExchangeRateViewModel = ExchangeRateViewModel(context!!)
+        mExchangeRateViewModel = ExchangeRateViewModel(this.context!!)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val exchangeRateBinding: ExchangeRateBinding = DataBindingUtil.inflate(inflater, R.layout.exchange_rate, container, false)
         exchangeRateBinding.viewModel = mExchangeRateViewModel
         return exchangeRateBinding.root
+    }
+
+    override fun onDestroy() {
+        mExchangeRateViewModel.onDestroy()
+        super.onDestroy()
     }
 
     companion object {
