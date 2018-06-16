@@ -18,7 +18,7 @@
             android:id="@+id/img_ava_nation_from"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:src="@color/colorPrimaryDark"
+            app:flagCurrency='@{viewModel.currency1.id == null? "" : viewModel.currency1.id}'
             app:layout_constraintLeft_toLeftOf="@+id/view_from"
             app:layout_constraintTop_toTopOf="@+id/view_from"
             android:clickable="false"/>
@@ -37,8 +37,8 @@
             android:layout_width="130dp"
             android:layout_height="60dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="100dp"
-            android:onClick="@{() -> viewModel.onClickFrom()}"
+            android:layout_marginTop="30dp"
+            android:onClick="@{() -> viewModel.onClickFrom(true)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
             android:id="@+id/img_ava_nation_to"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:src="@color/colorPrimaryDark"
+            app:flagCurrency='@{viewModel.currency2.id == null? "" : viewModel.currency2.id}'
             app:layout_constraintLeft_toLeftOf="@+id/view_to"
             app:layout_constraintTop_toTopOf="@+id/view_to"
             android:clickable="false"/>
@@ -65,7 +65,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="60dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_from" />
+            app:layout_constraintTop_toBottomOf="@+id/view_from"
+            android:onClick="@{() -> viewModel.onClickFrom(false)}"/>
 
         <EditText
             android:id="@+id/et_from"
@@ -93,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:text="TextView"
+            android:text="@{@string/convert_currency(viewModel.currency1.id,viewModel.rate1,viewModel.currency2.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_from" />
 
@@ -103,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:text="TextView"
+            android:text="@{@string/convert_currency(viewModel.currency2.id,viewModel.rate2,viewModel.currency1.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_to" />
     </android.support.constraint.ConstraintLayout>

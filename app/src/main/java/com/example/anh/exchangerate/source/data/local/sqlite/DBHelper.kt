@@ -1,4 +1,4 @@
-package com.example.anh.exchangerate.source.data
+package com.example.anh.exchangerate.source.data.local.sqlite
 
 import android.content.Context
 import android.database.Cursor
@@ -40,6 +40,29 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var cursor: Cursor? = null
         try {
             cursor = db!!.rawQuery("SELECT * FROM currency", null)
+        } catch (e: Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            return currencyList
+        }
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+                val currency = Currency()
+                currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
+                currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
+                currency.currencySymbol = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_SYMBOL))
+                currency.nationName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_NATION_NAME))
+                currencyList.add(currency)
+                cursor.moveToNext()
+            }
+        }
+        return currencyList
+    }
+
+    fun getBaseCurrency(vararg id: String): MutableList<Currency> {
+        val currencyList = mutableListOf<Currency>()
+        var cursor: Cursor? = null
+        try {
+            cursor = db!!.rawQuery("SELECT * FROM currency WHERE id IN(?, ?)", arrayOf(id[0], id[1]))
         } catch (e: Exception) {
             Log.e(DATABASE_NAME, e.message)
             return currencyList
