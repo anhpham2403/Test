@@ -18,19 +18,19 @@
             android:id="@+id/img_ava_nation_from"
             android:layout_width="100dp"
             android:layout_height="60dp"
+            android:clickable="false"
             app:flagCurrency='@{viewModel.currency1.id == null? "" : viewModel.currency1.id}'
             app:layout_constraintLeft_toLeftOf="@+id/view_from"
-            app:layout_constraintTop_toTopOf="@+id/view_from"
-            android:clickable="false"/>
+            app:layout_constraintTop_toTopOf="@+id/view_from" />
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="false"
             android:src="@drawable/ic_arrow_drop_down_black_24dp"
             app:layout_constraintRight_toRightOf="@id/view_from"
-            app:layout_constraintTop_toTopOf="@id/view_from"
-            android:clickable="false"/>
+            app:layout_constraintTop_toTopOf="@id/view_from" />
 
         <View
             android:id="@+id/view_from"
@@ -46,10 +46,10 @@
             android:id="@+id/img_ava_nation_to"
             android:layout_width="100dp"
             android:layout_height="60dp"
+            android:clickable="false"
             app:flagCurrency='@{viewModel.currency2.id == null? "" : viewModel.currency2.id}'
             app:layout_constraintLeft_toLeftOf="@+id/view_to"
-            app:layout_constraintTop_toTopOf="@+id/view_to"
-            android:clickable="false"/>
+            app:layout_constraintTop_toTopOf="@+id/view_to" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -64,29 +64,59 @@
             android:layout_height="60dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="60dp"
+            android:onClick="@{() -> viewModel.onClickFrom(false)}"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_from"
-            android:onClick="@{() -> viewModel.onClickFrom(false)}"/>
+            app:layout_constraintTop_toBottomOf="@+id/view_from" />
 
-        <EditText
+        <TextView
             android:id="@+id/et_from"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:onClick="@{()->viewModel.onClickItemCurrency(true, viewModel.currency1)}"
+            app:layout_constraintBottom_toTopOf="@+id/view1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_from"
+            app:layout_constraintTop_toTopOf="@+id/view_from"
+
+            />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/view_from"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view_from" />
 
-        <EditText
-            android:id="@+id/et_to"
+        <View
+            android:id="@+id/view2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:background="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/view_to"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/view_to" />
+
+        <TextView
+            android:id="@+id/et_to"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="@{()->viewModel.onClickItemCurrency(false, viewModel.currency2)}"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_to"
+            app:layout_constraintTop_toTopOf="@+id/view_to" />
 
         <TextView
             android:id="@+id/tv_rate_from"
@@ -96,7 +126,7 @@
             android:layout_marginStart="10dp"
             android:text="@{@string/convert_currency(viewModel.currency1.id,viewModel.rate1,viewModel.currency2.id)}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_from" />
+            app:layout_constraintTop_toBottomOf="@+id/view1" />
 
         <TextView
             android:id="@+id/tv_rate_to"
@@ -106,6 +136,6 @@
             android:layout_marginStart="10dp"
             android:text="@{@string/convert_currency(viewModel.currency2.id,viewModel.rate2,viewModel.currency1.id)}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_to" />
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
     </android.support.constraint.ConstraintLayout>
 </layout>
