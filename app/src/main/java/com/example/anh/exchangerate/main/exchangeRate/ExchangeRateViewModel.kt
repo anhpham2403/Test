@@ -9,6 +9,7 @@ import android.databinding.Bindable
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import com.android.databinding.library.baseAdapters.BR
+import com.example.anh.exchangerate.calculator.CalculatorActivity
 import com.example.anh.exchangerate.choosecurrency.ChooseCurrency
 import com.example.anh.exchangerate.choosecurrency.ChooseCurrencyViewModel
 import com.example.anh.exchangerate.source.data.local.sqlite.DBHelper
@@ -156,5 +157,9 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
 
     fun onDestroy() {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(localBroadcastReceiver)
+    }
+
+    fun onClickItemCurrency(isCurrency1: Boolean, currency: Currency) {
+        mContext.startActivity(CalculatorActivity.getInstance(mContext, isCurrency1, currency))
     }
 }

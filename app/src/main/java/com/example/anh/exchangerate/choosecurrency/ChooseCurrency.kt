@@ -24,6 +24,7 @@ class ChooseCurrency : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         var isCurrency1 = intent.getBooleanExtra("isCurrency1", false)
         mViewModel = ChooseCurrencyViewModel(this, isCurrency1)
         val binding: ChooseCurrencyBinding = DataBindingUtil.setContentView(this, R.layout.choose_currency)
@@ -33,5 +34,10 @@ class ChooseCurrency : AppCompatActivity() {
     override fun onDestroy() {
         mViewModel.onDestroy()
         super.onDestroy()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 }
