@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import com.android.databinding.library.baseAdapters.BR
 import com.example.anh.exchangerate.calculator.CalculatorActivity
+import com.example.anh.exchangerate.calculator.CalculatorViewModel
 import com.example.anh.exchangerate.choosecurrency.ChooseCurrency
 import com.example.anh.exchangerate.choosecurrency.ChooseCurrencyViewModel
 import com.example.anh.exchangerate.source.data.local.sqlite.DBHelper
@@ -22,6 +23,8 @@ import kotlinx.coroutines.experimental.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,42 +32,49 @@ import java.util.*
 class ExchangeRateViewModel(context: Context) : BaseObservable() {
     private var mContext: Context = context
     private val dbHelper: DBHelper = DBHelper(mContext)
-    var rate1: Float = 0f
+    var rate1: Double = 1.0
         @Bindable
         get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.rate1)
         }
-    var rate2: Float = 0f
+    var rate2: Double = 1.0
         @Bindable
         get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.rate2)
         }
-    var valueRate1: Float = 1f
+    var valueRate1: Double = 1.0
         @Bindable
         get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.valueRate1)
         }
-    var valueRate2: Float = 1f
+    var valueRate2: Double = 1.0
         @Bindable
         get() = field
         set(value) {
             field = value
             notifyPropertyChanged(BR.valueRate2)
         }
+    @Bindable
+    val formatter = DecimalFormat("###,###,###.##", DecimalFormatSymbols(Locale.ENGLISH))
+    @Bindable
+    val formatter1 = DecimalFormat("###,###,###.####", DecimalFormatSymbols(Locale.ENGLISH))
     private var localBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action == "isCurrency1") {
                 currency1 = intent.getParcelableExtra(ChooseCurrencyViewModel.EXTRA_DATA)
+                valueRate1 = intent.getDoubleExtra(CalculatorViewModel.EXTRA_KQ, valueRate1)
+                getData(true, valueRate1)
             } else if (intent.action == "isCurrency2") {
                 currency2 = intent.getParcelableExtra(ChooseCurrencyViewModel.EXTRA_DATA)
+                valueRate2 = intent.getDoubleExtra(CalculatorViewModel.EXTRA_KQ, valueRate2)
+                getData(false, valueRate2)
             }
-            getData()
         }
     }
 
@@ -106,14 +116,12 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
                 }.await()
                 callback.enqueue(object : Callback<JsonElement> {
                     override fun onFailure(call: Call<JsonElement>?, t: Throwable?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onResponse(call: Call<JsonElement>?, response: Response<JsonElement>?) {
-                        rate1 = response!!.body()!!.asJsonObject.get(query1.toString()).asJsonObject.get(date).asFloat
-                        rate2 = response!!.body()!!.asJsonObject.get(query2.toString()).asJsonObject.get(date).asFloat
-                        valueRate2 *= rate1
-
+                        rate1 = response!!.body()!!.asJsonObject.get(query1.toString()).asJsonObject.get(date).asDouble
+                        rate2 = response!!.body()!!.asJsonObject.get(query2.toString()).asJsonObject.get(date).asDouble
+                        valueRate2 = valueRate1 / rate2
                     }
                 })
             } catch (e: Exception) {
@@ -122,7 +130,7 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
         }
     }
 
-    private fun getData() {
+    private fun getData(isCurrency1: Boolean, valueRate: Double) {
         launch(CommonPool) {
             try {
                 val query1 = StringBuilder()
@@ -136,13 +144,17 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
                 }.await()
                 callback.enqueue(object : Callback<JsonElement> {
                     override fun onFailure(call: Call<JsonElement>?, t: Throwable?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onResponse(call: Call<JsonElement>?, response: Response<JsonElement>?) {
-                        rate1 = response!!.body()!!.asJsonObject.get(query1.toString()).asJsonObject.get(date).asFloat
-                        rate2 = response!!.body()!!.asJsonObject.get(query2.toString()).asJsonObject.get(date).asFloat
-                        valueRate2 *= rate1
+                        rate1 = response!!.body()!!.asJsonObject.get(query1.toString()).asJsonObject.get(date).asDouble
+                        rate2 = response!!.body()!!.asJsonObject.get(query2.toString()).asJsonObject.get(date).asDouble
+                        if (isCurrency1) {
+                            valueRate2 = valueRate1 / rate2
+                        } else {
+                            valueRate1 = valueRate2 / rate1
+
+                        }
                     }
                 })
             } catch (e: Exception) {

@@ -302,6 +302,21 @@
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.equalButtonClick()}"
                 android:text="="
+                android:visibility="@{viewModel.equal ? 0 : 8}"
+                app:layout_constraintHeight_percent="0.25"
+                app:layout_constraintLeft_toRightOf="@+id/button2"
+                app:layout_constraintTop_toBottomOf="@id/button9"
+                app:layout_constraintWidth_percent="0.25" />
+
+            <Button
+                android:id="@+id/button25"
+                style="@style/TextCalculator"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:onClick="@{()-> viewModel.equalButtonClick()}"
+                android:text="↵"
+                android:textSize="36sp"
+                android:visibility="@{viewModel.equal ? 8 : 0}"
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toBottomOf="@id/button9"
