@@ -3,36 +3,39 @@ package com.example.anh.exchangerate.source.data.local.sqlite
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.example.anh.exchangerate.source.model.Currency
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.lang.Exception
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     private val mContext: Context = context
     private var db: SQLiteDatabase? = null
-    override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(SQL_CREATE_ENTRIES)
+
+    init {
         val dbExist = checkDB()
         if (dbExist) {
 
         } else {
             this.readableDatabase
-
             try {
+                close()
                 copyDB()
-            } catch (e: Exception) {
+            } catch (e: java.lang.Exception) {
                 throw Error("Error copying DB")
 
             }
-
         }
     }
 
+    override fun onCreate(db: SQLiteDatabase?) {
+    }
+
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL(SQL_DELETE_ENTRIES)
-        onCreate(db)
     }
 
     fun getAllCurrency(): MutableList<Currency> {
@@ -40,7 +43,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var cursor: Cursor? = null
         try {
             cursor = db!!.rawQuery("SELECT * FROM currency", null)
-        } catch (e: Exception) {
+        } catch (e: java.lang.Exception) {
             Log.e(DATABASE_NAME, e.message)
             return currencyList
         }
@@ -83,14 +86,15 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     @Throws(IOException::class)
     private fun copyDB() {
-        val dbInput = mContext.assets.open(DBContract.Currency.COLUMN_TABLE_NAME)
+        val dbInput = mContext.assets.open(DATABASE_NAME)
         val outFile = DB_PATH + DATABASE_NAME
         val dbOutput = FileOutputStream(outFile)
 
         val buffer = ByteArray(1024)
-        val length = dbInput.read(buffer)
+        var length = dbInput.read(buffer)
         while (length > 0) {
             dbOutput.write(buffer, 0, length)
+            length = dbInput.read(buffer)
         }
         dbOutput.flush()
         dbOutput.close()
@@ -98,17 +102,15 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     private fun checkDB(): Boolean {
-        var check: SQLiteDatabase? = null
+        var check = false
         try {
-            val dbPath = DB_PATH + DATABASE_NAME
-            check = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY)
-        } catch (e: Exception) {
+            val myPath = DB_PATH + DATABASE_NAME
+            val dbfile = File(myPath)
+            check = dbfile.exists()
+        } catch (e: SQLiteException) {
             // TODO: handle exception
         }
-        if (check != null) {
-            check.close()
-        }
-        return check != null
+        return check
     }
 
     fun openDB() {
@@ -125,7 +127,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     companion object {
         // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 4
         const val DATABASE_NAME = "exchangerate.db"
         const val DB_PATH = "/data/data/com.example.anh.exchangerate/databases/"
         private const val SQL_CREATE_ENTRIES =
@@ -135,6 +137,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                         DBContract.Currency.COLUMN_CURRENCY_SYMBOL + " TEXT," +
                         DBContract.Currency.COLUMN_NATION_NAME + " TEXT)"
 
-        private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + DBContract.Currency.COLUMN_TABLE_NAME
+        private var creatDB: DBHelper? = null
+        @Synchronized
+        fun getHelper(context: Context): DBHelper {
+            if (creatDB == null)
+                creatDB = DBHelper(context)
+            return creatDB as DBHelper
+        }
     }
 }

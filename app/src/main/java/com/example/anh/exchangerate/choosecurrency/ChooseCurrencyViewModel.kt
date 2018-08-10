@@ -52,7 +52,6 @@ class ChooseCurrencyViewModel(context: Context, isCurrency1: Boolean) : BaseObse
     private fun getData() {
         launch(CommonPool) {
             try {
-                dbHelper.openDB()
                 var listCurrency = async { dbHelper.getAllCurrency() }.await()
                 dbHelper.close()
                 currencyAdapter.updateData(listCurrency)
