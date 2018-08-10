@@ -12,6 +12,7 @@ import com.example.anh.exchangerate.source.model.Currency
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import java.lang.Exception
 
 
 class ChooseCurrencyViewModel(context: Context, isCurrency1: Boolean) : BaseObservable(), OnItemClick<Currency> {
@@ -52,6 +53,7 @@ class ChooseCurrencyViewModel(context: Context, isCurrency1: Boolean) : BaseObse
     private fun getData() {
         launch(CommonPool) {
             try {
+                dbHelper.openDB()
                 var listCurrency = async { dbHelper.getAllCurrency() }.await()
                 dbHelper.close()
                 currencyAdapter.updateData(listCurrency)
