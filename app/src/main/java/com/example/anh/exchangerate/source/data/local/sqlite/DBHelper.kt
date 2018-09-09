@@ -11,6 +11,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
+import kotlin.jvm.Synchronized
+import kotlin.jvm.Throws
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     private val mContext: Context = context
@@ -21,7 +23,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         if (dbExist) {
 
         } else {
-            this.readableDatabase
+            this.getReadableDatabase()
             try {
                 close()
                 copyDB()
@@ -48,7 +50,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             return currencyList
         }
         if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast) {
+            while (!cursor.isAfterLast()) {
                 val currency = Currency()
                 currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
                 currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
@@ -71,7 +73,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             return currencyList
         }
         if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast) {
+            while (!cursor.isAfterLast()) {
                 val currency = Currency()
                 currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
                 currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
@@ -86,7 +88,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     @Throws(IOException::class)
     private fun copyDB() {
-        val dbInput = mContext.assets.open(DATABASE_NAME)
+        val dbInput = mContext.getAssets().open(DATABASE_NAME)
         val outFile = DB_PATH + DATABASE_NAME
         val dbOutput = FileOutputStream(outFile)
 

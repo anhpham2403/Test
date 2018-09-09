@@ -7,4 +7,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="convert_currency">1 %1$s = %2$s %3$s</string>
+    <string name="swap">Swap</string>
+    <string name="reload">Reload</string>
+    <string name="chart">Chart</string>
 </resources>
