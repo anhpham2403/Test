@@ -107,10 +107,27 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
             } catch (e: Exception) {
                 Toast.makeText(mContext, e.message, Toast.LENGTH_SHORT).show()
             }
+            mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<Rate> {
+                override fun onSuccess(data: Rate) {
+                    valueRate2 = valueRate1 / data.rate2
+                }
+
+                override fun onFailure(mes: String?) {
+                    Toast.makeText(mContext, mes, Toast.LENGTH_SHORT).show()
+                }
+            })
         }
-        mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<MutableList<Rate>> {
-            override fun onSuccess(data: MutableList<Rate>) {
-                valueRate2 = valueRate1 / rate2
+    }
+
+    private fun getData(isCurrency1: Boolean) {
+        mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<Rate> {
+            override fun onSuccess(data: Rate) {
+                if (isCurrency1) {
+                    valueRate2 = valueRate1 / data.rate2
+                } else {
+                    valueRate1 = valueRate2 / data.rate1
+
+                }
             }
 
             override fun onFailure(mes: String?) {
@@ -119,13 +136,13 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
         })
     }
 
-    private fun getData(isCurrency1: Boolean) {
-        mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<MutableList<Rate>> {
-            override fun onSuccess(data: MutableList<Rate>) {
+    private fun getDataReload(isCurrency1: Boolean) {
+        mCurrencyRepository.getRateServer(mContext, currency1, currency2, object : CallBack<Rate> {
+            override fun onSuccess(data: Rate) {
                 if (isCurrency1) {
-                    valueRate2 = valueRate1 / rate2
+                    valueRate2 = valueRate1 / data.rate2
                 } else {
-                    valueRate1 = valueRate2 / rate1
+                    valueRate1 = valueRate2 / data.rate1
 
                 }
             }
@@ -146,5 +163,21 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
 
     fun onClickItemCurrency(isCurrency1: Boolean, currency: Currency) {
         mContext.startActivity(CalculatorActivity.getInstance(mContext, isCurrency1, currency))
+    }
+
+    fun onChangePrimacy() {
+        var rateChange = rate1
+        rate1 = rate2
+        rate2 = rateChange
+        var valueRateChange = valueRate1
+        valueRate1 = valueRate2
+        valueRate2 = valueRateChange
+        var currencyChange = currency1
+        currency1 = currency2
+        currency2 = currencyChange
+    }
+
+    fun onReload() {
+        getDataReload(true)
     }
 }
