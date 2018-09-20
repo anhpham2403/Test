@@ -11,8 +11,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.Exception
-import kotlin.jvm.Synchronized
-import kotlin.jvm.Throws
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     private val mContext: Context = context
@@ -61,6 +59,56 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             }
         }
         return currencyList
+    }
+
+    fun getAllFavorite(id: String): Currency? {
+        var currency = Currency()
+        var cursor: Cursor? = null
+        try {
+            cursor = db!!.rawQuery("SELECT * FROM favorite FULL JOIN currency ON favorite.id = currency.id AND favorite.id=?", arrayOf(id))
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            return null
+        }
+        if (cursor.moveToFirst()) {
+            currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
+            currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
+            currency.currencySymbol = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_SYMBOL))
+            currency.nationName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_NATION_NAME))
+        }
+        return currency
+    }
+
+    fun getAllFavorites(): MutableList<Currency> {
+        val currencyList = mutableListOf<Currency>()
+        var cursor: Cursor? = null
+        try {
+            cursor = db!!.rawQuery("SELECT * FROM favorite FULL JOIN currency ON favorite.id = currency.id", null)
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            return currencyList
+        }
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                val currency = Currency()
+                currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
+                currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
+                currency.currencySymbol = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_SYMBOL))
+                currency.nationName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_NATION_NAME))
+                currencyList.add(currency)
+                cursor.moveToNext()
+            }
+        }
+        return currencyList
+    }
+
+    fun delFavorite(id: String): Boolean {
+        return try {
+            db!!.delete("favorite", " WHERE favorite.id = " + id, null) > 0
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            false
+        }
     }
 
     fun getBaseCurrency(vararg id: String): MutableList<Currency> {
