@@ -10,4 +10,10 @@ class DBContract {
             const val COLUMN_TABLE_NAME = "currency"
         }
     }
+
+    class Favorite {
+        companion object {
+            const val COLUMN_CURRENCY_ID = "id"
+        }
+    }
 }

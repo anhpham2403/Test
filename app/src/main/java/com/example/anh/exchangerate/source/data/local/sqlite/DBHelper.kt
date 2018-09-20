@@ -21,7 +21,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         if (dbExist) {
 
         } else {
-            this.readableDatabase
+            this.getReadableDatabase()
             try {
                 close()
                 copyDB()
@@ -48,7 +48,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             return currencyList
         }
         if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast) {
+            while (!cursor.isAfterLast()) {
                 val currency = Currency()
                 currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
                 currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
@@ -61,6 +61,56 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return currencyList
     }
 
+    fun getAllFavorite(id: String): Currency? {
+        var currency = Currency()
+        var cursor: Cursor? = null
+        try {
+            cursor = db!!.rawQuery("SELECT * FROM favorite FULL JOIN currency ON favorite.id = currency.id AND favorite.id=?", arrayOf(id))
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            return null
+        }
+        if (cursor.moveToFirst()) {
+            currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
+            currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
+            currency.currencySymbol = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_SYMBOL))
+            currency.nationName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_NATION_NAME))
+        }
+        return currency
+    }
+
+    fun getAllFavorites(): MutableList<Currency> {
+        val currencyList = mutableListOf<Currency>()
+        var cursor: Cursor? = null
+        try {
+            cursor = db!!.rawQuery("SELECT * FROM favorite FULL JOIN currency ON favorite.id = currency.id", null)
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            return currencyList
+        }
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                val currency = Currency()
+                currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
+                currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
+                currency.currencySymbol = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_SYMBOL))
+                currency.nationName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_NATION_NAME))
+                currencyList.add(currency)
+                cursor.moveToNext()
+            }
+        }
+        return currencyList
+    }
+
+    fun delFavorite(id: String): Boolean {
+        return try {
+            db!!.delete("favorite", " WHERE favorite.id = " + id, null) > 0
+        } catch (e: java.lang.Exception) {
+            Log.e(DATABASE_NAME, e.message)
+            false
+        }
+    }
+
     fun getBaseCurrency(vararg id: String): MutableList<Currency> {
         val currencyList = mutableListOf<Currency>()
         var cursor: Cursor? = null
@@ -71,7 +121,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
             return currencyList
         }
         if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast) {
+            while (!cursor.isAfterLast()) {
                 val currency = Currency()
                 currency.id = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_ID))
                 currency.currencyName = cursor.getString(cursor.getColumnIndex(DBContract.Currency.COLUMN_CURRENCY_NAME))
@@ -86,7 +136,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     @Throws(IOException::class)
     private fun copyDB() {
-        val dbInput = mContext.assets.open(DATABASE_NAME)
+        val dbInput = mContext.getAssets().open(DATABASE_NAME)
         val outFile = DB_PATH + DATABASE_NAME
         val dbOutput = FileOutputStream(outFile)
 

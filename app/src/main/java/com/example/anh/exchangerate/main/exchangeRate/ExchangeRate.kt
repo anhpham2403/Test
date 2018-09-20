@@ -9,6 +9,7 @@ import com.example.anh.exchangerate.databinding.ExchangeRateBinding
 
 class ExchangeRate : Fragment() {
     private lateinit var mExchangeRateViewModel: ExchangeRateViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mExchangeRateViewModel = ExchangeRateViewModel(this.context!!)
