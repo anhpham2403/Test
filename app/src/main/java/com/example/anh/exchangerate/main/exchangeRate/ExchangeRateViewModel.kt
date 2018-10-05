@@ -107,9 +107,11 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
             } catch (e: Exception) {
                 Toast.makeText(mContext, e.message, Toast.LENGTH_SHORT).show()
             }
-            mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<Rate> {
-                override fun onSuccess(data: Rate) {
-                    valueRate2 = valueRate1 / data.rate2
+            mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<List<Rate>> {
+                override fun onSuccess(data: List<Rate>) {
+                    valueRate2 = valueRate1 / data[0].rate2
+                    rate1 = data[0].rate1
+                    rate2 = data[0].rate2
                 }
 
                 override fun onFailure(mes: String?) {
@@ -120,14 +122,15 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
     }
 
     private fun getData(isCurrency1: Boolean) {
-        mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<Rate> {
-            override fun onSuccess(data: Rate) {
+        mCurrencyRepository.getRateSeverIfNecessary(mContext, currency1, currency2, object : CallBack<List<Rate>> {
+            override fun onSuccess(data: List<Rate>) {
                 if (isCurrency1) {
-                    valueRate2 = valueRate1 / data.rate2
+                    valueRate2 = valueRate1 / data[0].rate2
                 } else {
-                    valueRate1 = valueRate2 / data.rate1
-
+                    valueRate1 = valueRate2 / data[0].rate1
                 }
+                rate1 = data[0].rate1
+                rate2 = data[0].rate2
             }
 
             override fun onFailure(mes: String?) {
@@ -137,12 +140,12 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
     }
 
     private fun getDataReload(isCurrency1: Boolean) {
-        mCurrencyRepository.getRateServer(mContext, currency1, currency2, object : CallBack<Rate> {
-            override fun onSuccess(data: Rate) {
+        mCurrencyRepository.getRateServer(mContext, currency1, listOf(currency2), object : CallBack<List<Rate>> {
+            override fun onSuccess(data: List<Rate>) {
                 if (isCurrency1) {
-                    valueRate2 = valueRate1 / data.rate2
+                    valueRate2 = valueRate1 / data[0].rate2
                 } else {
-                    valueRate1 = valueRate2 / data.rate1
+                    valueRate1 = valueRate2 / data[0].rate1
 
                 }
             }

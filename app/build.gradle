@@ -51,3 +51,8 @@ dependencies {
 kapt {
     generateStubs = true
 }
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

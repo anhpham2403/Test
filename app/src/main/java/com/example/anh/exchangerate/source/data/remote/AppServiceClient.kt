@@ -8,6 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.HttpsURLConnection
 
 
 class AppServiceClient {
@@ -23,6 +24,10 @@ class AppServiceClient {
             httpClientBuilder.cache(Cache(application.cacheDir, cacheSize))
             httpClientBuilder.readTimeout(CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
             httpClientBuilder.connectTimeout(CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
+            httpClientBuilder.hostnameVerifier { _, session ->
+                val hv = HttpsURLConnection.getDefaultHostnameVerifier()
+                hv.verify("currency-server-test.herokuapp.com", session)
+            }
             val builder = Retrofit.Builder().baseUrl(Constant.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
             val retrofit = builder.client(httpClientBuilder.build())
