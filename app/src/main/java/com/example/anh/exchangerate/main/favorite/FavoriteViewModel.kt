@@ -5,7 +5,4 @@ import android.databinding.BaseObservable
 
 class FavoriteViewModel(context: Context) : BaseObservable() {
     private var mContext = context
-
-
-
 }
