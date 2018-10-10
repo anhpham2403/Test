@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mViewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
         mViewPager = findViewById(R.id.main_viewpager)
         mViewPager.adapter = mViewPagerAdapter
+        mViewPager.offscreenPageLimit = 1
     }
 
     override fun onBackPressed() {
