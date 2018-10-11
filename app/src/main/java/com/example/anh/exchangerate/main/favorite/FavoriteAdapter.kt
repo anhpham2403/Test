@@ -9,47 +9,51 @@ import com.example.anh.exchangerate.databinding.ItemFavoriteBinding
 import com.example.anh.exchangerate.source.model.Rate
 
 
-class FavoriteAdapter(rates: MutableList<Rate>, listener: OnClickItemListener<Rate>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+class FavoriteAdapter(rates: List<Rate>, value: Double,
+    listener: OnClickItemListener<Rate>) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding: ItemFavoriteBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_favorite, parent, false)
-        return ViewHolder(binding, mListener)
+  private var mRates: MutableList<Rate> = rates as MutableList<Rate>
+  private var mListener: OnClickItemListener<Rate> = listener
+  private var mValue = value
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    val binding: ItemFavoriteBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+        R.layout.item_favorite, parent, false)
+    return ViewHolder(binding, mListener, mValue)
+  }
+
+  override fun getItemCount(): Int {
+    if (mRates.isEmpty()) {
+      return 0
     }
+    return mRates.size
+  }
 
-    override fun getItemCount(): Int {
-        if (mRates.isEmpty()) {
-            return 0
-        }
-        return mRates.size
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    holder.bind(mRates[position])
+  }
+
+  fun updateDate(rates: List<Rate>) {
+    if (rates.isEmpty()) {
+      return
     }
+    mRates.addAll(rates)
+  }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(mRates[position])
-    }
-
-    private var mRates: MutableList<Rate> = rates
+  inner class ViewHolder(rateBinding: ItemFavoriteBinding,
+      listener: OnClickItemListener<Rate>, value: Double) : RecyclerView.ViewHolder(
+      rateBinding.root) {
+    private var mRateBinding = rateBinding
     private var mListener: OnClickItemListener<Rate> = listener
-
-    fun updateDate(rates: List<Rate>) {
-        if (rates.isEmpty()) {
-            return
-        }
-        mRates.addAll(mRates)
-        notifyDataSetChanged()
+    private var mValue: Double = value
+    fun bind(rate: Rate) {
+      mRateBinding.viewModel = rate
+      mRateBinding.listener = mListener
+      mRateBinding.value = mValue
+      mRateBinding.executePendingBindings()
     }
+  }
 
-    inner class ViewHolder(rateBinding: ItemFavoriteBinding, listener: OnClickItemListener<Rate>) : RecyclerView.ViewHolder(rateBinding.root) {
-        private var mRateBinding = rateBinding
-        private var mListener: OnClickItemListener<Rate> = listener
-
-        fun bind(rate: Rate) {
-            mRateBinding.viewModel = rate
-            mRateBinding.listener = mListener
-            mRateBinding.executePendingBindings()
-        }
-    }
-
-    interface OnClickItemListener<T> {
-        fun onCLickItem(item: T)
-    }
+  interface OnClickItemListener<T> {
+    fun onCLickItem(item: T)
+  }
 }

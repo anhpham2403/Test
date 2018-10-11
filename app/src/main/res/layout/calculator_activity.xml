@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.example.anh.exchangerate.calculator.CalculatorViewModel" />
+            type="com.example.anh.exchangerate.calculator.CalculatorViewModel"
+            />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <ImageView
             android:id="@+id/img_ava_nation_from"
@@ -20,7 +23,8 @@
             android:clickable="false"
             app:flagCurrency='@{viewModel.currency.id == null? "" : viewModel.currency.id}'
             app:layout_constraintLeft_toLeftOf="@+id/view_from"
-            app:layout_constraintTop_toTopOf="@+id/view_from" />
+            app:layout_constraintTop_toTopOf="@+id/view_from"
+            />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -29,7 +33,8 @@
             android:clickable="false"
             android:src="@drawable/ic_arrow_drop_down_black_24dp"
             app:layout_constraintRight_toRightOf="@id/view_from"
-            app:layout_constraintTop_toTopOf="@id/view_from" />
+            app:layout_constraintTop_toTopOf="@id/view_from"
+            />
 
         <View
             android:id="@+id/view_from"
@@ -39,7 +44,8 @@
             android:layout_marginTop="30dp"
             android:onClick="@{() -> viewModel.onClickFrom(viewModel.currency1)}"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <TextView
             android:id="@+id/tv_nation_name"
@@ -50,7 +56,8 @@
             android:textColor="@android:color/black"
             android:textSize="14sp"
             app:layout_constraintLeft_toRightOf="@+id/view_from"
-            app:layout_constraintTop_toTopOf="@+id/view_from" />
+            app:layout_constraintTop_toTopOf="@+id/view_from"
+            />
 
         <TextView
             android:id="@+id/tv_currency_name"
@@ -63,7 +70,8 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             app:layout_constraintLeft_toRightOf="@+id/view_from"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name"
+            />
 
         <ImageView
             android:id="@+id/img_delete"
@@ -74,7 +82,8 @@
             android:onClick="@{()-> viewModel.deleteButtonClick()}"
             android:src="@drawable/ic_delete_number"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_from" />
+            app:layout_constraintTop_toBottomOf="@+id/view_from"
+            />
 
         <TextView
             android:id="@+id/tv_number"
@@ -87,7 +96,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/img_delete"
             app:layout_constraintRight_toLeftOf="@+id/img_delete"
-            app:layout_constraintTop_toTopOf="@+id/img_delete" />
+            app:layout_constraintTop_toTopOf="@+id/img_delete"
+            />
 
         <TextView
             android:id="@+id/tv_currency_symbol"
@@ -100,7 +110,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/tv_number"
             app:layout_constraintRight_toLeftOf="@+id/tv_number"
-            app:layout_constraintTop_toTopOf="@+id/tv_number" />
+            app:layout_constraintTop_toTopOf="@+id/tv_number"
+            />
 
         <View
             android:id="@+id/view_line"
@@ -109,7 +120,8 @@
             android:layout_marginTop="20dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_delete" />
+            app:layout_constraintTop_toBottomOf="@+id/img_delete"
+            />
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
@@ -117,11 +129,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_line">
+            app:layout_constraintTop_toBottomOf="@id/view_line"
+            >
 
             <Button
                 android:id="@+id/button1"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('1')}"
@@ -129,11 +141,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button2"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('2')}"
@@ -141,11 +154,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button1"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button3"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('3')}"
@@ -153,12 +167,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button4"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.operationButtonClick('÷')}"
@@ -166,11 +181,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button3"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button5"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('4')}"
@@ -178,12 +194,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button1"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button6"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('5')}"
@@ -191,12 +208,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button1"
                 app:layout_constraintTop_toBottomOf="@id/button1"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button7"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('6')}"
@@ -204,12 +222,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toBottomOf="@id/button1"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button8"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.operationButtonClick('×')}"
@@ -217,11 +236,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button3"
                 app:layout_constraintTop_toBottomOf="@id/button1"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button9"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('7')}"
@@ -229,12 +249,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button5"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button10"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('8')}"
@@ -242,12 +263,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button1"
                 app:layout_constraintTop_toBottomOf="@id/button5"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button11"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('9')}"
@@ -255,12 +277,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toBottomOf="@id/button5"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button12"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.operationButtonClick('-')}"
@@ -268,11 +291,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button3"
                 app:layout_constraintTop_toBottomOf="@id/button5"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button13"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.commaButtonClick()}"
@@ -280,11 +304,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button9"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button14"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()->viewModel.numberButtonClick('0')}"
@@ -292,12 +317,13 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button1"
                 app:layout_constraintTop_toBottomOf="@id/button9"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
             />
 
             <Button
                 android:id="@+id/button15"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.equalButtonClick()}"
@@ -306,11 +332,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toBottomOf="@id/button9"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button25"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.equalButtonClick()}"
@@ -320,11 +347,12 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button2"
                 app:layout_constraintTop_toBottomOf="@id/button9"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
 
             <Button
                 android:id="@+id/button16"
-                style="@style/TextCalculator"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:onClick="@{()-> viewModel.operationButtonClick('+')}"
@@ -332,7 +360,9 @@
                 app:layout_constraintHeight_percent="0.25"
                 app:layout_constraintLeft_toRightOf="@+id/button3"
                 app:layout_constraintTop_toBottomOf="@id/button9"
-                app:layout_constraintWidth_percent="0.25" />
+                app:layout_constraintWidth_percent="0.25"
+                style="@style/TextCalculator"
+                />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
