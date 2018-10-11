@@ -7,8 +7,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.cert.CertificateException
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.HttpsURLConnection
+import javax.net.ssl.*
 
 
 class AppServiceClient {
@@ -19,16 +20,36 @@ class AppServiceClient {
 
         @JvmStatic
         fun initialize(application: Application) {
+            val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
+
+              override fun getAcceptedIssuers(): Array<java.security.cert.X509Certificate> {
+                return arrayOf()
+              }
+                @Throws(CertificateException::class)
+                override fun checkClientTrusted(chain: Array<java.security.cert.X509Certificate>,
+                    authType: String) {
+                }
+
+                @Throws(CertificateException::class)
+                override fun checkServerTrusted(chain: Array<java.security.cert.X509Certificate>,
+                    authType: String) {
+                }
+            })
+
+            // Install the all-trusting trust manager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+
+            // Create an ssl socket factory with our all-trusting manager
+            val sslSocketFactory = sslContext.socketFactory
             val httpClientBuilder = OkHttpClient.Builder()
             val cacheSize: Long = 10 * 1024 * 1024 // 10 MiB
             httpClientBuilder.cache(Cache(application.cacheDir, cacheSize))
             httpClientBuilder.readTimeout(CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
             httpClientBuilder.connectTimeout(CONNECTION_TIMEOUT.toLong(), TimeUnit.SECONDS)
-            httpClientBuilder.hostnameVerifier { _, session ->
-                val hv = HttpsURLConnection.getDefaultHostnameVerifier()
-                hv.verify("currency-server-test.herokuapp.com", session)
-            }
-            val builder = Retrofit.Builder().baseUrl(Constant.BASE_URL)
+            httpClientBuilder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
+            httpClientBuilder.hostnameVerifier { _, _ -> true }
+          val builder = Retrofit.Builder().baseUrl(Constant.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
             val retrofit = builder.client(httpClientBuilder.build())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

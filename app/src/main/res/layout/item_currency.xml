@@ -2,68 +2,73 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     >
     <data>
         <variable
             name="viewModel"
-            type="com.example.anh.exchangerate.source.model.Currency"/>
+            type="com.example.anh.exchangerate.source.model.Currency"
+            />
         <variable
             name="listener"
-            type="com.example.anh.exchangerate.choosecurrency.OnItemClick" />
+            type="com.example.anh.exchangerate.choosecurrency.OnItemClick"
+            />
     </data>
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onItemTimelineClick(viewModel)}"
         android:padding="10dp"
-        android:onClick="@{() -> listener.onItemTimelineClick(viewModel)}">
+        >
 
         <TextView
             android:id="@+id/tv_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewModel.id}"
-            android:textStyle="bold"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
-           />
+            android:textStyle="bold"
+            />
         <ImageView
+            android:id="@+id/img_flag"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:id="@+id/img_flag"
-            app:layout_constraintTop_toBottomOf="@+id/tv_id"
+            android:layout_marginTop="5dp"
+            android:src="@android:color/darker_gray"
+            app:flagCurrency="@{viewModel.id}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:src="@android:color/darker_gray"
-            android:layout_marginTop="5dp"
-            app:flagCurrency="@{viewModel.id}"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_nation_name"
-            app:layout_constraintTop_toBottomOf="@+id/img_flag"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:text="@{viewModel.nationName}"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="2dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_id"
             />
         <TextView
+            android:id="@+id/tv_nation_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_currency_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name"
+            android:layout_marginTop="2dp"
+            android:text="@{viewModel.nationName}"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_flag"
+            />
+        <TextView
+            android:id="@+id/tv_currency_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="@{viewModel.currencyName}"
-            android:layout_marginTop="2dp"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name"
+            />
 
         <TextView
+            android:id="@+id/tv_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_symbol"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="2dp"
             android:text="@{viewModel.currencySymbol}"
-            android:layout_marginTop="2dp" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_nation_name"
+            />
     </android.support.constraint.ConstraintLayout>
 </layout>
