@@ -28,8 +28,8 @@ class ChartViewModel(context: Context, index: Int) : BaseObservable() {
   private var mIndex = index
   private val dbHelper: DBHelper = DBHelper(mContext)
   private val mCurrencyRepository: CurrencyRepository = CurrencyRepository(mContext)
-  var current = mContext.getResources().getConfiguration().locale
-  var isCurrent1 = true
+  var current = mContext.getResources().getConfiguration().locale!!
+  private var isCurrent1 = true
   var dt = SimpleDateFormat("yyyyy-mm-dd hh:mm:ss", current)
   private var rates: List<Rate> = arrayListOf()
   var currency1 = Currency()
@@ -154,5 +154,9 @@ class ChartViewModel(context: Context, index: Int) : BaseObservable() {
     var currencyChange = currency1
     currency1 = currency2
     currency2 = currencyChange
+  }
+
+  fun onDestroy() {
+    LocalBroadcastManager.getInstance(mContext).unregisterReceiver(localBroadcastReceiver)
   }
 }

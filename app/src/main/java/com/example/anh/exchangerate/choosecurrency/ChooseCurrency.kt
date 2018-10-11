@@ -14,9 +14,9 @@ class ChooseCurrency : AppCompatActivity() {
 
     companion object {
         @JvmStatic
-        fun getInstance(context: Context, isCurrency1: Boolean): Intent {
+        fun getInstance(context: Context, index: Int): Intent {
             val intent = Intent(context, ChooseCurrency::class.java)
-            intent.putExtra("isCurrency1", isCurrency1)
+            intent.putExtra("isCurrency1", index)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             return intent
         }
@@ -25,7 +25,7 @@ class ChooseCurrency : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        var isCurrency1 = intent.getBooleanExtra("isCurrency1", false)
+        var isCurrency1 = intent.getIntExtra("isCurrency1", 1)
         mViewModel = ChooseCurrencyViewModel(this, isCurrency1)
         val binding: ChooseCurrencyBinding = DataBindingUtil.setContentView(this, R.layout.choose_currency)
         binding.viewModel = mViewModel

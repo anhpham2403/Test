@@ -7,6 +7,8 @@ import android.content.IntentFilter
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.Toast
 import com.android.databinding.library.baseAdapters.BR
 import com.example.anh.exchangerate.choosecurrency.ChooseCurrencyViewModel
@@ -15,6 +17,7 @@ import com.example.anh.exchangerate.source.data.CurrencyRepository
 import com.example.anh.exchangerate.source.data.local.sqlite.DBHelper
 import com.example.anh.exchangerate.source.model.Currency
 import com.example.anh.exchangerate.source.model.Rate
+import com.example.anh.exchangerate.widget.SimpleItemTouchHelperCallback
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -22,7 +25,11 @@ import java.lang.Exception
 
 
 class FavoriteViewModel(
-    context: Context) : BaseObservable(), FavoriteAdapter.OnClickItemListener<Rate> {
+    context: Context) : BaseObservable(), FavoriteAdapter.OnClickItemListener<Rate>, FavoriteAdapter.OnStartDragListener {
+  override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+    itemTouchHelper?.startDrag(viewHolder)
+  }
+
   override fun onCLickItem(item: Rate) {
     TODO(
         "not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -48,7 +55,27 @@ class FavoriteViewModel(
       field = value
       notifyPropertyChanged(BR.currentCurrency)
     }
-  var adapter: FavoriteAdapter = FavoriteAdapter(arrayListOf(), value, this@FavoriteViewModel)
+  var itemTouchHelper: ItemTouchHelper? = null
+    @Bindable
+    get() {
+      return field
+    }
+    set(value) {
+      field = value
+      notifyPropertyChanged(BR.itemTouchHelper)
+    }
+  var editData: Boolean = false
+    @Bindable
+    get() {
+      return field
+    }
+    set(value) {
+      field = value
+      notifyPropertyChanged(BR.editData)
+      notifyPropertyChanged(BR.itemTouchHelper)
+    }
+  var adapter: FavoriteAdapter = FavoriteAdapter(arrayListOf(), value, this@FavoriteViewModel,
+      this@FavoriteViewModel, editData)
     @Bindable
     get() = field
     set(value) {
@@ -56,31 +83,50 @@ class FavoriteViewModel(
       notifyPropertyChanged(BR.adapter)
     }
 
-  init {
-    initData()
-  }
-
   private var localBroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       if (intent.action == "isCurrency1") {
         currentCurrency = intent.getParcelableExtra(ChooseCurrencyViewModel.EXTRA_DATA)
+      } else if (intent.action == "add_favorite") {
+        launch(CommonPool) {
+          try {
+            val currency: Currency = intent.getParcelableExtra(ChooseCurrencyViewModel.EXTRA_DATA)
+            var result = false
+            dbHelper.openDB()
+            async {
+              result = dbHelper.addFavorite(currency.id!!)
+            }.await()
+            dbHelper.close()
+            if (result) {
+              listCurrency.add(currency)
+              getData()
+            }
+          } catch (e: Exception) {
+            Toast.makeText(mContext, e.message, Toast.LENGTH_SHORT).show()
+          }
+        }
       }
     }
   }
 
-  private fun initData() {
+  init {
     val filter = IntentFilter()
     filter.addAction("isCurrency1")
+    filter.addAction("add_favorite")
     LocalBroadcastManager.getInstance(mContext).registerReceiver(localBroadcastReceiver, filter)
+    initData()
+    val callback = SimpleItemTouchHelperCallback(adapter)
+    itemTouchHelper = ItemTouchHelper(callback)
+  }
+
+  private fun initData() {
     launch(CommonPool) {
       try {
         dbHelper.openDB()
         var listBaseCurrency: MutableList<Currency> = async {
           dbHelper.getBaseCurrency("USD", "EUR")
         }.await()
-        if (currentCurrency != null) {
-          currentCurrency = listBaseCurrency[0]
-        }
+        currentCurrency = listBaseCurrency[0]
         dbHelper.close()
       } catch (e: Exception) {
         Toast.makeText(mContext, e.message, Toast.LENGTH_SHORT).show()
@@ -104,5 +150,25 @@ class FavoriteViewModel(
             }
           })
     }
+  }
+
+  fun getData() {
+    launch(CommonPool) {
+      mCurrencyRepository.getRateServer(mContext, currentCurrency, listCurrency,
+          object : CallBack<List<Rate>> {
+            override fun onSuccess(data: List<Rate>) {
+              adapter.reloadData(data)
+              adapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(mes: String?) {
+              Toast.makeText(mContext, mes, Toast.LENGTH_SHORT).show()
+            }
+          })
+    }
+  }
+
+  fun onDestroy() {
+    LocalBroadcastManager.getInstance(mContext).unregisterReceiver(localBroadcastReceiver)
   }
 }

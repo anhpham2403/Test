@@ -3,6 +3,7 @@ package com.example.anh.exchangerate.utils
 import android.databinding.BindingAdapter
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.github.mikephil.charting.charts.LineChart
@@ -59,6 +60,15 @@ class BindingUtils {
         lineChart.data = data
         val l = lineChart.legend
         l.form = Legend.LegendForm.LINE
+      }
+    }
+
+    @BindingAdapter("app:itemTouchHelper", "app:isEdit")
+    @JvmStatic
+    fun setItemTouchHelper(recyclerView: RecyclerView, itemTouchHelper: ItemTouchHelper,
+        isEdit: Boolean) {
+      if (isEdit) {
+        itemTouchHelper.attachToRecyclerView(recyclerView)
       }
     }
   }
