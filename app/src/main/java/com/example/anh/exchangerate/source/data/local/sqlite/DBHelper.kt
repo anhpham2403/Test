@@ -1,5 +1,6 @@
 package com.example.anh.exchangerate.source.data.local.sqlite
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
@@ -22,7 +23,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     if (dbExist) {
 
     } else {
-      this.getReadableDatabase()
+      this.readableDatabase
       try {
         close()
         copyDB()
@@ -43,6 +44,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     val currencyList = mutableListOf<Currency>()
     var cursor: Cursor?
     try {
+      db = this.readableDatabase
       cursor = db!!.rawQuery("SELECT * FROM currency", null)
     } catch (e: java.lang.Exception) {
       Log.e(DATABASE_NAME, e.message)
@@ -70,6 +72,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     var currency = Currency()
     var cursor: Cursor?
     try {
+      db = this.readableDatabase
       cursor = db!!.rawQuery(
           "SELECT * FROM favorite FULL JOIN currency ON favorite.id = currency.id AND favorite.id=?",
           arrayOf(id))
@@ -93,6 +96,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     val currencyList = mutableListOf<Currency>()
     var cursor: Cursor?
     try {
+      db = this.readableDatabase
       cursor = db!!.rawQuery("SELECT * FROM currency,favorite WHERE currency.id = favorite.id",
           null)
     } catch (e: java.lang.Exception) {
@@ -117,8 +121,19 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     return currencyList
   }
 
+  fun addFavorite(id: String): Boolean {
+    return try {
+      db = this.writableDatabase
+      db!!.insert("favorite", null, ContentValues().apply { put("id", id) }) > 0
+    } catch (e: java.lang.Exception) {
+      Log.e(DATABASE_NAME, e.message)
+      false
+    }
+  }
+
   fun delFavorite(id: String): Boolean {
     return try {
+      db = this.readableDatabase
       db!!.delete("favorite", " WHERE favorite.id = " + id, null) > 0
     } catch (e: java.lang.Exception) {
       Log.e(DATABASE_NAME, e.message)
@@ -130,6 +145,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     val currencyList = mutableListOf<Currency>()
     var cursor: Cursor?
     try {
+      db = this.writableDatabase
       cursor = db!!.rawQuery("SELECT * FROM currency WHERE id IN(?, ?)", arrayOf(id[0], id[1]))
     } catch (e: Exception) {
       Log.e(DATABASE_NAME, e.message)

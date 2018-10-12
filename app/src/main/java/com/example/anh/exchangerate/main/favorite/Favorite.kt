@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
 import com.example.anh.exchangerate.R
+import com.example.anh.exchangerate.choosecurrency.ChooseCurrency
 import com.example.anh.exchangerate.databinding.FavoriteBinding
 
 class Favorite : Fragment() {
@@ -25,7 +26,7 @@ class Favorite : Fragment() {
   }
 
   override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-    inflater!!.inflate(R.menu.chart_menu, menu)
+    inflater!!.inflate(R.menu.favorite_menu, menu)
     super.onCreateOptionsMenu(menu, inflater)
   }
 
@@ -33,17 +34,26 @@ class Favorite : Fragment() {
     // Handle action bar item clicks here. The action bar will
     // automatically handle clicks on the Home/Up button, so long
     // as you specify a parent activity in AndroidManifest.xml.
-    when (item.itemId) {
+    return when (item.itemId) {
       R.id.add -> {
-        return true
+        this.startActivity(ChooseCurrency.getInstance(activity!!, 2))
+        true
       }
       R.id.sort -> {
-        return true
+        mFavoriteViewModel.editData = !mFavoriteViewModel.editData
+        mFavoriteViewModel.adapter.editItem(mFavoriteViewModel.editData)
+        true
       }
       R.id.reload -> {
-        return true
+        mFavoriteViewModel.getData()
+        true
       }
-      else -> return super.onOptionsItemSelected(item)
+      else -> super.onOptionsItemSelected(item)
     }
+  }
+
+  override fun onDestroy() {
+    mFavoriteViewModel.onDestroy()
+    super.onDestroy()
   }
 }

@@ -18,6 +18,12 @@
             name="value"
             type="Double"
             />
+
+        <variable
+            name="isEditItem"
+            type="Boolean"
+            />
+        <import type="android.view.View"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -72,7 +78,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/handle"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -87,6 +93,20 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/tv_sum"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:scaleType="center"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_reorder_black_24dp"
+            android:visibility="@{isEditItem ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
     </android.support.constraint.ConstraintLayout>

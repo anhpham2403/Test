@@ -162,7 +162,7 @@ class ExchangeRateViewModel(context: Context) : BaseObservable() {
   }
 
   fun onClickFrom(isCurrency1: Boolean) {
-    mContext.startActivity(ChooseCurrency.getInstance(mContext, isCurrency1))
+    mContext.startActivity(ChooseCurrency.getInstance(mContext,  if (isCurrency1) 0 else 1))
   }
 
   fun onDestroy() {

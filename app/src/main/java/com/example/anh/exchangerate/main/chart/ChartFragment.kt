@@ -37,4 +37,9 @@ class ChartFragment : Fragment() {
     super.onCreate(savedInstanceState)
     mChartViewModel = ChartViewModel(this.context!!, mIndex)
   }
+
+  override fun onDestroy() {
+    mChartViewModel.onDestroy()
+    super.onDestroy()
+  }
 }

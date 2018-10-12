@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
     <item
-        android:id="@+id/nav_favorite"
-        android:icon="@drawable/ic_favorite_black_24dp"
-        android:title="Favorites"/>
-    <item
         android:id="@+id/nav_rate"
         android:icon="@drawable/ic_swap_vertical_circle_black_24dp"
         android:title="Converter"/>
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_favorite_black_24dp"
+        android:title="Favorites"/>
     <item
         android:id="@+id/nav_chart"
         android:icon="@drawable/ic_trending_up_black_24dp"
